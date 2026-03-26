@@ -21,10 +21,23 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-// Initialize Realtime Database and get a reference to the service
-const database = getDatabase(app);
-// Initialize Firebase Cloud Messaging and get a reference to the service
-const messaging = getMessaging(app);
 
-export { app, analytics, database, messaging };
+// Services that require browser APIs – initialize only on client
+let analytics = null;
+let database = null;
+
+if (typeof window !== "undefined") {
+    analytics = getAnalytics(app);
+    database = getDatabase(app);
+} else {
+    // On server, you may still want to use database via admin SDK or skip it.
+    // For now, leave it null; you can import getDatabase in components when needed.
+}
+
+export { app, analytics, database };
+
+
+// // Initialize Firebase Cloud Messaging and get a reference to the service
+// const messaging = getMessaging(app);
+
+// export { app, analytics, database, messaging };
