@@ -58,8 +58,23 @@ export default function App() {
               try {
                 const token = await getToken(messaging, { vapidKey: "BDwVW-d-te72QspUGyyRH-2BFIpox8albsGPKUtdPRznuU1DNfld7rDqQdvzzLPS9qBNm5xZ-nyWAHLxG-c9oQI" });
                 console.log("FCM Token:", token);
+                
+                // Subscribe token to backend
+                if (token) {
+                  const res = await fetch('/api/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, topic: `user_${normalizedUsername}` })
+                  });
+                  if (res.ok) {
+                    console.log(`Backend topic subscription successful for user_${normalizedUsername}`);
+                  } else {
+                    console.error("Failed to subscribe via backend API");
+                  }
+                }
+
               } catch (e) {
-                console.error("FCM Token fetch failed", e);
+                console.error("FCM Token fetch failed or Subscribe failed", e);
               }
             }
           }, 1000);
@@ -90,7 +105,6 @@ export default function App() {
             });
           }
 
-          // Push to Realtime Database
           const notifRef = ref(db, `notifications/user_${normalizedUsername}`);
           push(notifRef, {
             title,
@@ -98,7 +112,6 @@ export default function App() {
             receivedAt: Date.now()
           }).catch(console.error);
 
-          // Show a local floating toast
           showToast(`New Notification: ${title}`, "success");
         });
       } else {
