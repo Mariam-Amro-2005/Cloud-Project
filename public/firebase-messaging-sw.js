@@ -14,7 +14,6 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 const db = firebase.database();
-let username = "guest";
 
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
@@ -26,7 +25,7 @@ messaging.onBackgroundMessage((payload) => {
     body: notificationBody,
     icon: '/favicon.ico'
   };
-  const username = payload.data?.username || "guest";
+  const username = "user_" + (payload.data?.username || "guest");
   console.log("Username: ", username);
   console.log(payload.data)
 

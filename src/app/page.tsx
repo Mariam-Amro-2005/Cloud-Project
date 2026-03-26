@@ -24,10 +24,9 @@ export default function App() {
   useEffect(() => {
     if (!isLoggedIn || !normalizedUsername) return;
 
-    // Simulate topic subscription locally
     console.log(`Subscribed to topic: user_${normalizedUsername}`);
     showToast(`Subscribed to topic user_${normalizedUsername}`, "success");
-    
+
 
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
@@ -37,12 +36,10 @@ export default function App() {
     }
 
 
-    // Request Notification Permission and setup Foreground Message listener
     const requestPermissionAndListen = async () => {
       try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-          // Wait briefly in case messaging is still initializing
           setTimeout(async () => {
             if (messaging) {
               try {
@@ -74,7 +71,7 @@ export default function App() {
           const body = payload.notification?.body || payload.data?.body || '';
 
           // Push to Realtime Database
-          const notifRef = ref(db, `notifications/${normalizedUsername}`);
+          const notifRef = ref(db, `notifications/user_${normalizedUsername}`);
           push(notifRef, {
             title,
             body,
@@ -91,7 +88,7 @@ export default function App() {
     initMessaging();
 
     // Listen to Firebase RTDB for Realtime Inbox updates
-    const notificationsRef = ref(db, `notifications/${normalizedUsername}`);
+    const notificationsRef = ref(db, `notifications/user_${normalizedUsername}`);
     const unsubscribeDb = onValue(notificationsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -117,7 +114,7 @@ export default function App() {
     if (!username.trim()) return;
     setLoading(true);
 
-    // Normalize string: lowercase and remove spaces
+
     const normalized = username.toLowerCase().replace(/\s/g, "");
 
     setTimeout(() => {
@@ -138,13 +135,13 @@ export default function App() {
     showToast("Logged out successfully.", "success");
   };
 
-  // Toast util
+
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3500);
   };
 
-  // Format time util
+
   const timeAgo = (timestamp: number) => {
     const seconds = Math.floor((Date.now() - timestamp) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
@@ -156,7 +153,7 @@ export default function App() {
     return `${days}d ago`;
   };
 
-  // Login Screen Render
+
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center p-4 selection:bg-blue-500/30">
@@ -228,7 +225,7 @@ export default function App() {
     );
   }
 
-  // Realtime Inbox Screen Render
+
   return (
     <div className="min-h-screen bg-gray-950 text-white selection:bg-blue-500/30">
       {toast && (
@@ -266,7 +263,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Inbox Content */}
+
       <main className="max-w-3xl mx-auto px-6 py-12">
         <div className="flex justify-between items-end mb-8 relative">
           <div>
