@@ -12,6 +12,11 @@ firebase.initializeApp({
   appId: "1:679872158612:web:d0015e9e265b153d1b0d81",
 });
 
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+  console.log('Service Worker activated and claimed control!');
+});
+
 const messaging = firebase.messaging();
 const db = firebase.database();
 

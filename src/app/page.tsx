@@ -11,7 +11,19 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
-  // Restore session
+  const syncUserWithWorker = async (normalizedUser: string) => {
+    if ('serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.ready;
+      if (registration.active) {
+        registration.active.postMessage({
+          type: 'SET_USERNAME',
+          username: normalizedUser
+        });
+        console.log("Username synced with Service Worker:", normalizedUser);
+      }
+    }
+  };
+
   useEffect(() => {
     const savedUser = localStorage.getItem("normalized_username");
     if (savedUser) {
@@ -26,6 +38,7 @@ export default function App() {
 
     console.log(`Subscribed to topic: user_${normalizedUsername}`);
     showToast(`Subscribed to topic user_${normalizedUsername}`, "success");
+
 
 
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -69,6 +82,13 @@ export default function App() {
           console.log("Message received. ", payload);
           const title = payload.notification?.title || payload.data?.title || 'New Notification';
           const body = payload.notification?.body || payload.data?.body || '';
+
+          if (Notification.permission === "granted") {
+            new Notification(title, {
+              body: body,
+              icon: "/favicon.ico"
+            });
+          }
 
           // Push to Realtime Database
           const notifRef = ref(db, `notifications/user_${normalizedUsername}`);
@@ -116,7 +136,7 @@ export default function App() {
 
 
     const normalized = username.toLowerCase().replace(/\s/g, "");
-
+    syncUserWithWorker(normalized);
     setTimeout(() => {
       setNormalizedUsername(normalized);
       setIsLoggedIn(true);
