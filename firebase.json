@@ -7,15 +7,12 @@
       "**/node_modules/**"
     ],
     "frameworksBackend": {
-      "region": "us-central1"
+      "region": "us-central1",
+      "secrets": [
+        "PROJECT_ID",
+        "CLIENT_EMAIL",
+        "PRIVATE_KEY"
+      ]
     }
-  },
-  "functions": {
-    "runtime": "nodejs20",
-    "secretEnvVars": [
-      "PROJECT_ID",
-      "CLIENT_EMAIL",
-      "PRIVATE_KEY"
-    ]
   }
 }
