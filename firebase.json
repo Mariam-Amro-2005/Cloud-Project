@@ -1,0 +1,21 @@
+{
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "us-central1"
+    }
+  },
+  "functions": {
+    "runtime": "nodejs20",
+    "secretEnvVars": [
+      "PROJECT_ID",
+      "CLIENT_EMAIL",
+      "PRIVATE_KEY"
+    ]
+  }
+}
