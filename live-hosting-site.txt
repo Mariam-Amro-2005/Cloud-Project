@@ -1,0 +1,2 @@
+Live Firebase Hosting (Static Hosting + Cloud Functions) Site Link:
+https://cloud-project-2026-bcb55.web.app/ 
