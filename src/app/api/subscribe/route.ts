@@ -4,7 +4,26 @@ import * as admin from 'firebase-admin';
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
     try {
-        admin.initializeApp();
+        console.log("Checking Environment Variables...");
+        console.log("Project ID:", process.env.FIREBASE_PROJECT_ID ? "Loaded" : "Missing");
+        console.log("Client Email:", process.env.FIREBASE_CLIENT_EMAIL ? "Loaded" : "Missing");
+        console.log("Private Key:", process.env.FIREBASE_PRIVATE_KEY ? "Loaded" : "Missing");
+
+        if (process.env.FIREBASE_PRIVATE_KEY) {
+            // Use local .env variables if they exist (for localhost)
+            admin.initializeApp({
+                credential: admin.credential.cert({
+                    projectId: process.env.FIREBASE_PROJECT_ID,
+                    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+                }),
+            });
+            console.log("Initialized Firebase Admin with explicit credentials.");
+        } else {
+            // Use default credentials on Firebase infrastructure
+            admin.initializeApp();
+            console.log("Initialized Firebase Admin with default credentials.");
+        }
     } catch (error) {
         console.error('Firebase admin initialization error', error);
     }
