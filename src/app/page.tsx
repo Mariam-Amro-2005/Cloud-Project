@@ -58,7 +58,7 @@ export default function App() {
               try {
                 const token = await getToken(messaging, { vapidKey: "BDwVW-d-te72QspUGyyRH-2BFIpox8albsGPKUtdPRznuU1DNfld7rDqQdvzzLPS9qBNm5xZ-nyWAHLxG-c9oQI" });
                 console.log("FCM Token:", token);
-                
+
                 // Subscribe token to backend
                 if (token) {
                   const res = await fetch('/api/subscribe', {
@@ -300,7 +300,7 @@ export default function App() {
       <main className="max-w-3xl mx-auto px-6 py-12">
         <div className="flex justify-between items-end mb-8 relative">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Realtime Inbox</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Realtime Inboxxxxxxxxxxxxxxxxxxxxx</h2>
             <p className="text-gray-400 font-medium">Your notifications instantly sync here</p>
           </div>
           <div className="bg-gray-900/80 border border-gray-800 px-4 py-2 rounded-xl flex items-center space-x-2 shadow-inner">
